@@ -1,0 +1,5 @@
+# p2/confs/ingress.yaml
+# Ingress : routing par Host (app1.com -> app1, app2.com -> app2, defaut -> app3).
+# Consomme par le Traefik embarque dans K3s.
+# A ecrire toi-meme : voir guide-p2.md (section 3).
+# TODO

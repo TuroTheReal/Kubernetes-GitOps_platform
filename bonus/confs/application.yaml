@@ -1,0 +1,4 @@
+# bonus/confs/application.yaml
+# Application Argo CD pointant sur le GitLab LOCAL (URL interne du service gitlab).
+# A ecrire toi-meme : voir guide-bonus.md (section 2).
+# TODO
