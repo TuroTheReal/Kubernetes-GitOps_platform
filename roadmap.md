@@ -53,6 +53,8 @@ Reexploite : modele manager/worker (= Swarm), provisioning (bloc shell du Vagran
 
 ## Part 2 — K3s + 3 apps + Ingress  (dossier `p2`, ~6-10h, modele objet K8s)
 
+> Guide pas-a-pas detaille : [guide-p2.md](guide-p2.md)
+
 C'est ici que j'apprends le modele objet : Pod -> Deployment -> Service -> Ingress + Namespace.
 
 - [ ] 1 VM, K3s mode server
@@ -66,6 +68,8 @@ C'est ici que j'apprends le modele objet : Pod -> Deployment -> Service -> Ingre
 ---
 
 ## Part 3 — K3d + Argo CD  (dossier `p3`, ~8-12h, GITOPS = le coeur)
+
+> Guide pas-a-pas detaille : [guide-p3.md](guide-p3.md)
 
 Distinction a ancrer (tombe en defense) : K3s = binaire sur la machine ; K3d = ce meme K3s empaquete dans des conteneurs Docker (chaque node = un conteneur), plus jetable, ideal CI/local.
 
@@ -81,6 +85,8 @@ Distinction a ancrer (tombe en defense) : K3s = binaire sur la machine ; K3d = c
 ---
 
 ## Bonus — GitLab local + Helm  (dossier `bonus`, ~10h+)  [ENGAGE]
+
+> Guide detaille : [guide-bonus.md](guide-bonus.md)
 
 - [ ] Instance GitLab locale (namespace `gitlab`), install via Helm
 - [ ] Reconfigurer Part 3 pour tirer depuis le GitLab local au lieu de GitHub
