@@ -1,0 +1,4 @@
+# p2/confs/app1.yaml
+# Deployment (1 replica) + Service pour app1.
+# A ecrire toi-meme : voir guide-p2.md (section 3).
+# TODO

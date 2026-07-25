@@ -1,0 +1,5 @@
+# p3/confs/application.yaml
+# Objet Application Argo CD : repoURL (repo app PUBLIC separe), destination namespace dev, auto-sync.
+# Rappel : le deployment.yaml de l'app vit dans un AUTRE repo GitHub public, pas ici.
+# A ecrire toi-meme : voir guide-p3.md (section 3).
+# TODO

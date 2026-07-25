@@ -1,0 +1,4 @@
+# p2 — Vagrantfile
+# 1 VM : <login>S (192.168.56.110, K3s server). Provider VirtualBox.
+# A ecrire toi-meme : voir guide-p2.md (section 1).
+# TODO

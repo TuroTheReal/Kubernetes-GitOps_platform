@@ -1,0 +1,4 @@
+# bonus/confs/values.yaml
+# Config du chart Helm GitLab (domaine, ressources reduites pour le lab...).
+# A ecrire toi-meme : voir guide-bonus.md + https://docs.gitlab.com/charts/
+# TODO

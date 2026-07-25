@@ -1,0 +1,5 @@
+# p1 — Vagrantfile
+# 2 VMs : <login>S (192.168.56.110, K3s server) et <login>SW (192.168.56.111, K3s agent)
+# 1 CPU / 1024 Mo, reseau prive, SSH sans password, provider VirtualBox.
+# A ecrire toi-meme : voir guide-p1.md (section 1).
+# TODO
