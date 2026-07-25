@@ -75,12 +75,6 @@ kubectl get pods -n kube-system | grep traefik   # verif Traefik embarque
 
 ---
 
-## Questions de revision (a refaire sans regarder)
+## Quiz de revision
 
-1. En Swarm je deploie un service avec N replicas. Quel objet K8s joue ce role, et quel objet gere les replicas dessous ?
-2. Mes Pods meurent et renaissent avec des IP changeantes. Quel objet K8s donne une adresse stable pour les joindre ?
-3. Router app1.com / app2.com / defaut sur une seule IP : quel objet K8s, et quel composant deja dans K3s l'execute ?
-4. Difference K3s / K3d en une phrase ?
-5. En GitOps, ou vit la verite de ce qui doit tourner, et qui reconcilie le cluster avec elle ?
-6. CD classique (Jenkins qui fait kubectl apply) vs GitOps : qui initie le deploiement dans chaque cas ?
-7. "Part 1 c'est surtout de l'ops" : ops = ?
+Les questions (groupees bases / notions nouvelles) + le corrige sont dans [quiz.md](quiz.md). A refaire de tete avant de coder et avant la soutenance.
