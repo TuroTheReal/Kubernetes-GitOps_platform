@@ -1,0 +1,7 @@
+# Vagrant
+.vagrant/
+*.log
+
+# Secret K3s : ne jamais committer le token de join
+node-token
+**/node-token
