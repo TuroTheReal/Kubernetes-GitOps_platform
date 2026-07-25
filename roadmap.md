@@ -19,10 +19,25 @@ Regle : effort inverse a la familiarite. Survoler P1, prendre le temps sur les o
 
 ---
 
+## Environnement (contrainte materielle, verifiee)
+
+Le sujet impose de tout faire dans une VM. Mais P1/P2 lancent Vagrant qui cree 2 vraies VMs : il faut de la virtualisation materielle (VT-x/AMD-V). Diagnostic fait :
+
+- **orion (VPS Hetzner Cloud, CPX/CX)** : PAS de nested virtualization (`kvm-ok` = KO, `vmx/svm` = 0, `modprobe kvm_intel` = Operation not supported). Verrouille cote hebergeur, non activable. Docker deja installe.
+- **Machines 42** : x86 avec VirtualBox, virtu materielle dispo.
+
+Repartition figee :
+
+| Parts | Machine | Provider / techno |
+| --- | --- | --- |
+| P1, P2 | Machines 42 | Vagrant + VirtualBox |
+| P3, bonus | orion (Hetzner Cloud) | Docker / K3d (pas de VM imbriquee) |
+
+---
+
 ## Prerequis
 
-- [ ] VM hote (tout le projet se fait dans une VM)
-- [ ] Provider Vagrant choisi (VirtualBox par defaut) — a valider selon Mac Intel / Apple Silicon
+- [x] Provider P1/P2 : Vagrant + VirtualBox sur machines 42 (orion / Hetzner Cloud incapable de nested virt)
 - [ ] `kubectl` installe sur la machine de travail
 - [ ] Docs ouvertes :
   - [K3s](https://docs.k3s.io/)
