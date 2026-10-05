@@ -1,6 +1,6 @@
 # Roadmap — Inception-of-Things (IoT)
 
-> Plan d'attaque calibré sur mon knowledge vault (`~/vaults/devops-cloud_vault`).
+> Plan d'attaque calibré sur mon knowledge vault (`~/devops-cloud_vault`).
 > Sujet : intro Kubernetes via K3s / K3d + GitOps (Argo CD). Repo 42, dossiers `p1`, `p2`, `p3`, `bonus`.
 
 ## Objectif
