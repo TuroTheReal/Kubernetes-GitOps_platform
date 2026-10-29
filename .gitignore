@@ -5,3 +5,7 @@
 # Secret K3s : ne jamais committer le token de join
 node-token
 **/node-token
+
+# Kubeconfig : identifiants admin du cluster
+k3s.yaml
+*.kubeconfig
