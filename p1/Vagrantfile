@@ -1,5 +1,25 @@
-# p1 — Vagrantfile
-# 2 VMs : <login>S (192.168.56.110, K3s server) et <login>SW (192.168.56.111, K3s agent)
-# 1 CPU / 1024 Mo, reseau prive, SSH sans password, provider VirtualBox.
-# A ecrire toi-meme : voir guide-p1.md (section 1).
-# TODO
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-22.04"
+
+    config.vm.define "artbernaS" do |server|
+        server.vm.hostname = "artbernaS"
+        server.vm.network "private_network", ip: "192.168.56.110"
+        server.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+            vb.cpus = 1
+            vb.name = "artbernaS"
+        end
+        server.vm.provision "shell", path: "./scripts/server.sh"
+    end
+
+    config.vm.define "artbernaSW" do |worker|
+        worker.vm.hostname = "artbernaSW"
+        worker.vm.network "private_network", ip: "192.168.56.111"
+        worker.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+            vb.cpus = 1
+            vb.name = "artbernaSW"
+        end
+        worker.vm.provision "shell", path: "./scripts/worker.sh"
+    end
+end

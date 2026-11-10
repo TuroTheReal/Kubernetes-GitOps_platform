@@ -28,7 +28,7 @@
 | --- | --- | --- |
 | `docker service` | Deployment (+ ReplicaSet) | quasi nul |
 | replicas distribues | `replicas:` du Deployment | quasi nul |
-| manager / worker | control-plane / worker (K3s server / agent) | quasi nul |
+| manager / worker | control-plane / worker (K3s server / agent) | faible |
 | rolling update Swarm | Deployment `strategy: RollingUpdate` | faible |
 | overlay network + routing mesh | Service (ClusterIP) + kube-proxy | moyen |
 | Traefik par labels Docker | Ingress (objet YAML), Traefik embarque dans K3s | moyen |
@@ -60,7 +60,48 @@ kubectl apply -f <fichier.yaml>        # appliquer un manifest
 kubectl describe <type> <nom>          # detail / debug d'un objet
 kubectl logs <pod>                     # logs d'un pod
 kubectl get pods -n kube-system | grep traefik   # verif Traefik embarque
+kubectl get nodes -o wide              # P1 : nodes + leurs IPs (verifier 192.168.56.x)
+kubectl get all -n <namespace>         # tout voir d'un coup (pods, services, deployments)
+kubectl get ingress                    # P2 : montrer l'Ingress (demande en defense)
+kubectl delete -f <fichier.yaml>       # supprimer ce qu'un manifest a cree
 ```
+
+## Commandes Vagrant a connaitre
+
+A lancer depuis le dossier qui contient le `Vagrantfile`.
+
+```bash
+export VAGRANT_HOME=/goinfre/$USER/.vagrant.d   # boxes sur goinfre (home trop petit) #propore au projet ne pas mettre dans vault.
+
+vagrant up                       # creer + demarrer + provisionner les VMs
+vagrant status                   # etat des VMs (running, poweroff, not created)
+vagrant ssh <nom>                # entrer dans une VM (ex: vagrant ssh artbernaS)
+vagrant ssh <nom> -c "<cmd>"     # lancer une commande dans la VM sans y entrer
+vagrant provision                # relancer les scripts sans recreer les VMs
+vagrant halt                     # eteindre les VMs (garde le disque)
+vagrant destroy -f               # supprimer les VMs (repartir de zero)
+vagrant box list                 # boxes telechargees
+```
+
+Raccourci P1 : `vagrant ssh artbernaS -c "kubectl get nodes"`
+
+---
+
+## Mini-comprehension (Vagrant / VM / reseau)
+
+- **Vagrant = telecommande**, il ne fait pas tourner les VMs. Le **provider** (VirtualBox, VMware, libvirt, Docker...) les fait tourner.
+- **Vagrant vs Terraform** : Vagrant = VMs **locales** jetables (dev, labo). Terraform = **vraie infra** cloud (prod).
+- **KVM** = hyperviseur integre au noyau Linux. **libvirt** = outil de gestion au-dessus de KVM. **VirtualBox** = autre hyperviseur
+- **K8s dans Docker (K3d)** = dev / CI, rapide, jetable. **K8s dans VM / serveurs** = prod, vrai reseau.
+- **K8s s'installe sur CHAQUE machine du cluster** : 1 en mode **server** (le chef), les autres en mode **agent** (= worker) qui le rejoignent avec un token.
+- **Vagrantfile** = s'execute sur mon PC, cree le *materiel* (Terraform-like). **Script** = s'execute DANS la VM, installe les *logiciels* (Ansible-like).
+- **`config.vm.box`** = global (toutes les VMs). `server.vm.box` dans un bloc = remplace pour cette VM seulement.
+- **`do |x| ... end`** = un bloc (comme `{ }` en C). 1 `do` = 1 `end`. L'indentation ne compte pas.
+- **Provisioning** = le script de config lance dans la VM. Auto au 1er `vagrant up` seulement. Script modifie -> `vagrant provision`.
+- **`inline:`** = script ecrit dans le Vagrantfile. **`path:`** = script dans un fichier (`scripts/`, exige par le sujet).
+- **Shebang** = 1re ligne `#!/bin/bash` : dit quel programme execute le script.
+- **Chaque VM a 2 cartes reseau** : `eth0` = NAT (10.0.2.15, identique partout, Internet + SSH), `eth1` = reseau prive (192.168.56.x, pour que les VMs se parlent). K3s doit utiliser **eth1**.
+- **`ip -4 a`** = affiche les cartes reseau et leurs IPv4.
 
 ---
 
@@ -71,7 +112,6 @@ kubectl get pods -n kube-system | grep traefik   # verif Traefik embarque
 - [Argo CD](https://argo-cd.readthedocs.io/)
 - [Vagrant](https://developer.hashicorp.com/vagrant/docs)
 - [Kubernetes concepts](https://kubernetes.io/docs/concepts/)
-- [App de test wil42/playground](https://hub.docker.com/r/wil42/playground) (port 8888, tags v1 / v2)
 
 ---
 
