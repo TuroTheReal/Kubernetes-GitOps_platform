@@ -1,4 +1,38 @@
-# p2/confs/app2.yaml
-# Deployment (3 replicas exiges) + Service pour app2.
-# A ecrire toi-meme : voir guide-p2.md (section 3).
-# TODO
+apiVersion: v1                           # version d'API des Services (le coeur de K8s)
+kind: Service                            # type d'objet : adresse fixe devant des pods
+metadata:
+  name: app2                             # nom du Service (= nom DNS interne, l'Ingress le cible)
+spec:
+  selector:                              # "j'envoie le trafic aux pods qui portent CETTE etiquette"
+    app: app2                            # doit etre EXACTEMENT l'etiquette des pods (template.metadata.labels)
+  ports:
+    - protocol: TCP
+      port: 80                           # 1re porte : le port ou le Service ecoute (celui qu'on appelle)
+      targetPort: 8080                     # 2e porte : le port ou l'app ecoute dans le pod (= containerPort)
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2                             # nom du Deployment
+  labels:
+    app: app2
+spec:
+  replicas: 3                            # combien de pods
+  selector:
+    matchLabels:                         # "les pods que je gère, ce sont ceux qui ont..."
+      app: app2
+  template:                              # le MOULE pour fabriquer chaque pod
+    metadata:
+      labels:
+        app: app2                        # l'étiquette collée sur chaque pod (= matchLabels)
+    spec:
+      containers:
+      - name: hellok8s                     # nom du conteneur dans le pod
+        image: paulbouwer/hello-kubernetes:1.11   # l'image Docker
+        env:
+        - name: MESSAGE
+          value: "Hello from app2"
+        ports:
+        - containerPort: 8080              # le port où l'app écoute
