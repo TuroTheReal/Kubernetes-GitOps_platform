@@ -102,6 +102,47 @@ Raccourci P1 : `vagrant ssh artbernaS -c "kubectl get nodes"`
 - **Shebang** = 1re ligne `#!/bin/bash` : dit quel programme execute le script.
 - **Chaque VM a 2 cartes reseau** : `eth0` = NAT (10.0.2.15, identique partout, Internet + SSH), `eth1` = reseau prive (192.168.56.x, pour que les VMs se parlent). K3s doit utiliser **eth1**.
 - **`ip -4 a`** = affiche les cartes reseau et leurs IPv4.
+- **`/24` apres l'IP** = les 24 premiers bits = le reseau. Tout `192.168.56.x` = meme reseau = se parlent directement.
+- **Sans eth0 (NAT)** = plus d'Internet dans la VM (impossible de telecharger K3s) + plus de `vagrant ssh`.
+- **PC <-> VM** : VirtualBox cree une carte sur le PC aussi (`vboxnet0` = 192.168.56.1). PC et VMs sont branches sur le meme switch virtuel.
+- **Reseau vs cluster** : le reseau (Vagrant) = *pouvoir se parler*. Le token (K3s) = *avoir le droit d'entrer dans le cluster*.
+- **Provider** = a installer avant Vagrant (VirtualBox gratuit).
+- **journalctl -u <service>** = logs d'un service systemd (`-u` = unit). Debug K3s : `journalctl -u k3s` / `-u k3s-agent`.
+- **Container runtime (containerd)** = le programme qui lance vraiment les conteneurs. Kubernetes decide, containerd execute. Docker utilise aussi containerd en interne.
+- **kubectl** = telecommande du cluster. `get nodes` = lister les machines. `-o wide` = plus de colonnes (IP, OS...).
+
+---
+
+## Imbrication K8s : cluster > node > pod > conteneur
+
+```text
+CLUSTER = l'equipe entiere (1 chef + des workers)
+│
+├── NODE = une machine (ici une VM)          ex: artbernas  (.110)
+│   ├── POD = une "boite" avec sa propre IP  ex: app1  (10.42.0.5)
+│   │   └── CONTENEUR = l'app qui tourne     ex: glasck.gg
+│   └── POD
+│       └── CONTENEUR
+│
+└── NODE = une autre machine                  ex: artbernasw (.111)
+    └── POD
+        └── CONTENEUR
+```
+
+| Niveau | C'est quoi (simple) | Analogie | Equivalent Swarm |
+| --- | --- | --- | --- |
+| Cluster | le groupe de machines | une entreprise | le swarm |
+| Node | une machine (VM / serveur) | un bureau | un node |
+| Pod | une boite qui contient 1 (parfois +) conteneur, avec 1 IP | un poste de travail | une task |
+| Conteneur | l'application qui tourne | l'employe | le conteneur |
+
+- **Pod ≈ conteneur** dans 95 % des cas (1 pod = 1 conteneur). Le pod = l'emballage que K8s sait gerer (IP, redemarrage, placement).
+- **Plusieurs conteneurs dans 1 pod** = rare : ils partagent la meme IP et le meme disque (ex: app + un petit conteneur qui envoie ses logs).
+- **On ne choisit pas le node d'un pod** : on dit "je veux 3 copies", le chef les repartit sur les nodes.
+- **Cluster avec 1 seul node** = possible : la meme machine est chef ET worker.
+- **Namespace ≠ cluster** : le cluster = l'immeuble (machines reelles). Le namespace = un **dossier** dans le cluster pour ranger les objets (`default`, `kube-system`, P3 : `argocd` + `dev`). Memes nodes, juste un rangement : un pod de `dev` peut tourner sur le meme node qu'un pod de `argocd`.
+- **Namespace = coupe "logique"** (rangement, droits, noms). **Node = coupe "physique"** (sur quelle machine ca tourne). Les deux sont independants.
+- Sans `-n`, kubectl regarde le namespace `default`. `-n <ns>` = un namespace, `-A` = tous.
 
 ---
 
