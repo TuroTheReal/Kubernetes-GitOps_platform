@@ -1,5 +1,36 @@
-# p2/confs/ingress.yaml
-# Ingress : routing par Host (app1.com -> app1, app2.com -> app2, defaut -> app3).
-# Consomme par le Traefik embarque dans K3s.
-# A ecrire toi-meme : voir guide-p2.md (section 3).
-# TODO
+apiVersion: networking.k8s.io/v1   # groupe "networking" de l'API K8s, version v1 (stable)
+kind: Ingress                      # type d'objet : table de tri HTTP (lue par Traefik)
+metadata:
+  name: ingress-p2                 # nom de l'objet (kubectl get/describe ingress). Minuscules obligatoires.
+spec:
+  rules:                           # liste des regles de tri (chaque "-" = 1 regle)
+  - host: app1.com                 # regle 1 : si le Host demande = app1.com...
+    http:                          # ...pour le trafic HTTP...
+      paths:                       # ...liste des chemins (pages) a trier :
+      - path: /                    #   a partir de la page "/"
+        pathType: Prefix           #   Prefix = tout ce qui COMMENCE par "/" (= tout le site)
+        backend:                   #   destination :
+          service:
+            name: app1             #     le Service nomme app1
+            port:
+              number: 80           #     son "port:" (pas le targetPort)
+  - host: app2.com                 # regle 2 : si le Host demande = app2.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app2
+            port:
+              number: 80
+  - host:                          # regle 3 : PAS de host = n'importe quel site -> le defaut
+    http:                          # (Traefik teste d'abord les regles avec host, plus precises)
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app3
+            port:
+              number: 80
