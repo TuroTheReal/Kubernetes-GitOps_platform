@@ -143,6 +143,7 @@ CLUSTER = l'equipe entiere (1 chef + des workers)
 - **Namespace ≠ cluster** : le cluster = l'immeuble (machines reelles). Le namespace = un **dossier** dans le cluster pour ranger les objets (`default`, `kube-system`, P3 : `argocd` + `dev`). Memes nodes, juste un rangement : un pod de `dev` peut tourner sur le meme node qu'un pod de `argocd`.
 - **Namespace = coupe "logique"** (rangement, droits, noms). **Node = coupe "physique"** (sur quelle machine ca tourne). Les deux sont independants.
 - Sans `-n`, kubectl regarde le namespace `default`. `-n <ns>` = un namespace, `-A` = tous.
+- **Quoi surveiller ?** Script : attendre le **node** `Ready` (= API prete pour `apply`). Avant de tester : verifier les **pods** (`get pods -A`, surtout `traefik` Running sinon port 80 ferme). "Le cluster" = juste nodes + pods ensemble.
 
 ---
 
