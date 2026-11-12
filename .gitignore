@@ -9,3 +9,4 @@ node-token
 # Kubeconfig : identifiants admin du cluster
 k3s.yaml
 *.kubeconfig
+*.pdf
