@@ -48,4 +48,6 @@ fi
 
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 
+#create argocd application
+kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
 
