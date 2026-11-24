@@ -46,12 +46,6 @@ if ! kubectl get deployment -n argocd argocd-server > /dev/null 2>&1; then
     kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 fi
 
-#install helm if not installed
-if ! command -v helm > /dev/null; then
-    echo "Installing helm..."
-    curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash
-fi
-
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 
 #create argocd application (TODO etape 6 : application.yaml encore vide)
@@ -63,16 +57,15 @@ if ! kubectl get namespace gitlab > /dev/null 2>&1; then
     kubectl create namespace gitlab
 fi
 
-#install gitlab with helm
-echo "Installing GitLab (5-10 min)..."
-helm repo add gitlab https://charts.gitlab.io
-helm repo update
-helm upgrade --install gitlab gitlab/gitlab -n gitlab -f "$(dirname "$0")/../confs/values.yaml" --skip-crds --timeout 900s
-kubectl wait --for=condition=available deployment --all -n gitlab --timeout=900s
+#install gitlab
+echo "Installing GitLab (3-5 min)..."
+kubectl apply -f "$(dirname "$0")/../confs/gitlab.yaml"
+kubectl wait --for=condition=available deployment/gitlab -n gitlab --timeout=900s
 
 #show gitlab root password
 echo "GitLab root password:"
-kubectl -n gitlab get secret gitlab-gitlab-initial-root-password -o jsonpath="{.data.password}" | base64 -d; echo
+kubectl exec -n gitlab deploy/gitlab -- grep 'Password:' /etc/gitlab/initial_root_password
+
 #show argocd admin password
 echo "ArgoCD admin password:"
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
