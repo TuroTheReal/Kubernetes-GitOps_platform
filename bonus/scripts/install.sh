@@ -48,9 +48,6 @@ fi
 
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 
-#create argocd application (TODO etape 6 : application.yaml encore vide)
-#kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
-
 #create gitlab namespace if not exists
 if ! kubectl get namespace gitlab > /dev/null 2>&1; then
     echo "Creating gitlab namespace..."
@@ -61,6 +58,9 @@ fi
 echo "Installing GitLab (3-5 min)..."
 kubectl apply -f "$(dirname "$0")/../confs/gitlab.yaml"
 kubectl wait --for=condition=available deployment/gitlab -n gitlab --timeout=900s
+
+#create argocd application (after gitlab: argo reads the repo hosted on it)
+kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
 
 #show gitlab root password
 echo "GitLab root password:"
