@@ -1,4 +1,18 @@
-# bonus/confs/application.yaml
-# Application Argo CD pointant sur le GitLab LOCAL (URL interne du service gitlab).
-# A ecrire toi-meme : voir guide-bonus.md (section 2).
-# TODO
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: http://gitlab.gitlab.svc/root/artberna-Kubernetes-GitOps_platform.git
+    targetRevision: main
+    path: .
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
