@@ -17,3 +17,7 @@ fi
 if ! command -v k3d > /dev/null; then
     curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 fi
+
+if ! sg docker -c "k3d cluster get iot" > /dev/null 2>&1; then
+    sg docker -c 'k3d cluster create iot -p "8888:8888@loadbalancer"'
+fi
