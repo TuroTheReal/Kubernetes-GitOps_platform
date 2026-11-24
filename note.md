@@ -111,6 +111,13 @@ Raccourci P1 : `vagrant ssh artbernaS -c "kubectl get nodes"`
 - **Container runtime (containerd)** = le programme qui lance vraiment les conteneurs. Kubernetes decide, containerd execute. Docker utilise aussi containerd en interne.
 - **kubectl** = telecommande du cluster. `get nodes` = lister les machines. `-o wide` = plus de colonnes (IP, OS...).
 
+## Mini-comprehension (VM hote / virtualisation)
+
+- **Groupe `docker`** : `usermod -aG docker $USER` ne marche qu'a la **prochaine connexion**. Dans un script : `sg docker -c "commande"` pour l'utiliser tout de suite.
+- **Script idempotent** = relancable sans erreur. `command -v outil ||` installer ; `kubectl create ... --dry-run=client -o yaml | kubectl apply -f -` au lieu de `create`.
+- **`set -e`** = le script s'arrete a la 1re erreur au lieu de continuer a moitie.
+- **Debug d'un gel** : `journalctl -k -b -1` = logs du noyau de la session **precedente** (avant le redemarrage).
+
 ---
 
 ## Imbrication K8s : cluster > node > pod > conteneur
