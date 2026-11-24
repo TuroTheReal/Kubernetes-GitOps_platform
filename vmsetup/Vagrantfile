@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
         # IP joignable depuis le PC : app P3 -> http://192.168.57.10:8888
         server.vm.network "private_network", ip: "192.168.57.10"
         server.vm.provider "virtualbox" do |vb|
-            vb.memory = "8192"
+            vb.memory = "12288"
             vb.cpus = 8
             vb.name = "IoT"
         end
