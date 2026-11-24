@@ -12,3 +12,8 @@ apt-get update
 apt-get install -y git curl ca-certificates
 
 echo "VM IoT prete. Connexion : ssh IoT"
+
+if [ ! -d /home/vagrant/Kubernetes-GitOps_platform ]; then
+    echo "Clonage du repo Kubernetes-GitOps_platform..."
+    sudo -u vagrant git clone https://github.com/TuroTheReal/Kubernetes-GitOps_platform.git /home/vagrant/Kubernetes-GitOps_platform
+fi
