@@ -27,7 +27,7 @@ fi
 #create k3d cluster if not exists
 if ! sg docker -c "k3d cluster get iot" > /dev/null 2>&1; then
     echo "Installing k3d cluster..."
-    sg docker -c 'k3d cluster create iot -p "8888:8888@loadbalancer"'
+    sg docker -c 'k3d cluster create iot -p "8888:8888@loadbalancer" -p "80:80@loadbalancer"'
 fi
 
 #create namespaces if not exists
@@ -54,9 +54,25 @@ fi
 
 kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 
-#create argocd application
-kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
+#create argocd application (TODO etape 6 : application.yaml encore vide)
+#kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
 
+#create gitlab namespace if not exists
+if ! kubectl get namespace gitlab > /dev/null 2>&1; then
+    echo "Creating gitlab namespace..."
+    kubectl create namespace gitlab
+fi
+
+#install gitlab with helm
+echo "Installing GitLab (5-10 min)..."
+helm repo add gitlab https://charts.gitlab.io
+helm repo update
+helm upgrade --install gitlab gitlab/gitlab -n gitlab -f "$(dirname "$0")/../confs/values.yaml" --timeout 900s
+kubectl wait --for=condition=available deployment --all -n gitlab --timeout=900s
+
+#show gitlab root password
+echo "GitLab root password:"
+kubectl -n gitlab get secret gitlab-gitlab-initial-root-password -o jsonpath="{.data.password}" | base64 -d; echo
 #show argocd admin password
 echo "ArgoCD admin password:"
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
