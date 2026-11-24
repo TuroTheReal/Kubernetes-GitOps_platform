@@ -2,7 +2,7 @@
 set -e
 
 #install docker if not installed
-if ! command -v docker > /kubectl get pods -n argocddev/null; then
+if ! command -v docker > /dev/null; then
     echo "Installing docker..."
     curl -fsSL https://get.docker.com | sh
 fi
