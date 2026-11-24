@@ -21,3 +21,6 @@ fi
 if ! sg docker -c "k3d cluster get iot" > /dev/null 2>&1; then
     sg docker -c 'k3d cluster create iot -p "8888:8888@loadbalancer"'
 fi
+
+kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
