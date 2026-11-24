@@ -13,3 +13,7 @@ if ! command -v kubectl > /dev/null; then
     sudo install -m 0755 kubectl /usr/local/bin/kubectl
     rm kubectl
 fi
+
+if ! command -v k3d > /dev/null; then
+    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+fi
