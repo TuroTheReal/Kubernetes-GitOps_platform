@@ -51,3 +51,11 @@ kubectl wait --for=condition=available deployment --all -n argocd --timeout=300s
 #create argocd application
 kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
 
+#show argocd admin password
+echo "ArgoCD admin password:"
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+#ArgoCD UI (run manually, blocks the terminal):
+#kubectl port-forward svc/argocd-server -n argocd 8080:443 --address 0.0.0.0
+#then on the PC: https://192.168.57.10:8080 (user: admin)
+
