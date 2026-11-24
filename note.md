@@ -118,6 +118,13 @@ Raccourci P1 : `vagrant ssh artbernaS -c "kubectl get nodes"`
 - **`set -e`** = le script s'arrete a la 1re erreur au lieu de continuer a moitie.
 - **Debug d'un gel** : `journalctl -k -b -1` = logs du noyau de la session **precedente** (avant le redemarrage).
 
+## Mini-comprehension (P3 / bonus)
+
+- **Manifest** = un fichier YAML qui decrit UN objet K8s : `apiVersion` (quel dictionnaire) + `kind` (quel type) + `metadata` (nom, namespace) + `spec` (ce que je veux). C'est la "commande" passee a Kubernetes. Plusieurs manifests dans un fichier = separes par `---`.
+- **Controller** = programme qui surveille un `kind` et fait correspondre la realite a la demande (Deployment → pods ; `Application` → application-controller d'Argo CD). **CRD** = un nouveau `kind` ajoute au dictionnaire de K8s.
+- **GitOps / Argo CD** : l'agent TIRE Git (toutes les 3 min, ou Refresh / webhook), compare, applique. `selfHeal` = annule les modifs faites a la main, `prune` = supprime ce qui a disparu de Git.
+- **Adresse interne d'un Service** = `<service>.<namespace>.svc` (ex. `gitlab.gitlab.svc`, `kubernetes.default.svc`). Dans le cluster on utilise ca ; depuis l'exterieur : Ingress ou port (`-p`).
+
 ---
 
 ## Imbrication K8s : cluster > node > pod > conteneur
