@@ -67,7 +67,7 @@ fi
 echo "Installing GitLab (5-10 min)..."
 helm repo add gitlab https://charts.gitlab.io
 helm repo update
-helm upgrade --install gitlab gitlab/gitlab -n gitlab -f "$(dirname "$0")/../confs/values.yaml" --timeout 900s
+helm upgrade --install gitlab gitlab/gitlab -n gitlab -f "$(dirname "$0")/../confs/values.yaml" --skip-crds --timeout 900s
 kubectl wait --for=condition=available deployment --all -n gitlab --timeout=900s
 
 #show gitlab root password
