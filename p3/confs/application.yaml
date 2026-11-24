@@ -1,5 +1,18 @@
-# p3/confs/application.yaml
-# Objet Application Argo CD : repoURL (repo app PUBLIC separe), destination namespace dev, auto-sync.
-# Rappel : le deployment.yaml de l'app vit dans un AUTRE repo GitHub public, pas ici.
-# A ecrire toi-meme : voir guide-p3.md (section 3).
-# TODO
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/TuroTheReal/artberna-Kubernetes-GitOps_platform.git
+    targetRevision: main
+    path: .
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
